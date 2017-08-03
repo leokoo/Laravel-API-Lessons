@@ -12,11 +12,6 @@ class LessonsTableSeeder extends Seeder
      */
     public function run()
     {
-    	$faker = Faker::create();
-    	
-	    DB::table('lesson')->insert([
-	    	'title' => $faker->sentence(5),
-		    'body'  => $faker->paragraph(4)
-	    ]);
+	    $lessons = factory(App\Lesson::class, 30)->create();
     }
 }
