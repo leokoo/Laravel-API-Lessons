@@ -14,7 +14,13 @@ class LessonsController extends Controller
      */
     public function index()
     {
-        return Lesson::all(); //really bad practice
+        return Lesson::all();
+
+        // really bad practice
+	    // 1) All is bad
+	    // 2) No way to attach meta data
+	    // 3) Linking db structure to API output
+	    // 4) No way to signal headers/response code
     }
 
     /**
