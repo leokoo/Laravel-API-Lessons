@@ -13,8 +13,11 @@ class CreateLessonsTable extends Migration
      */
     public function up()
     {
-        Schema::table('title:string, body:text', function (Blueprint $table) {
-            //
+        Schema::create('lessons', function (Blueprint $table) {
+            $table->increments('id');
+	        $table->string('title');
+	        $table->text('body');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class CreateLessonsTable extends Migration
      */
     public function down()
     {
-        Schema::table('title:string, body:text', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('lessons');
     }
 }
