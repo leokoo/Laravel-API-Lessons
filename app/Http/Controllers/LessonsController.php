@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Lesson;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class LessonsController extends Controller
 {
@@ -14,13 +15,17 @@ class LessonsController extends Controller
      */
     public function index()
     {
-        return Lesson::all();
-
         // really bad practice
 	    // 1) All is bad
 	    // 2) No way to attach meta data
 	    // 3) Linking db structure to API output
 	    // 4) No way to signal headers/response code
+
+	    $lessons =  Lesson::all();
+	    return Response::json([
+	    	'data' => $lessons->toArray()
+	    ], 200);
+
     }
 
     /**
