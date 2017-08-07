@@ -5,15 +5,32 @@ namespace App\Http\Controllers;
 use App\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use App\Acme\Transformers\LessonTransformer;
 
 class LessonsController extends Controller {
+
+	/**
+	 * @var Acme\Transformers\LessonTransformer
+	 */
+	protected $lessonTransformer;
+
+	/**
+	 * LessonsController constructor.
+	 * @param Acme\Transformers\LessonTransformer $lessonTransformer
+	 */
+	public function __construct(LessonTransformer $lessonTransformer)
+	{
+		$this->lessonTransformer = $lessonTransformer;
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
 
-	public function index() {
+	public function index()
+	{
 		// really bad practice
 		// 1) All is bad
 		// 2) No way to attach meta data
@@ -21,9 +38,9 @@ class LessonsController extends Controller {
 		// 4) No way to signal headers/response code
 		$lessons = Lesson::all();
 
-		return Response::json( [
-			'data' => $this->transformCollection( $lessons )
-		], 200 );
+		return Response::json([
+			'data' => $this->lessonTransformer->transformCollection($lessons->all())
+		], 200);
 	}
 
 	/**
@@ -31,7 +48,8 @@ class LessonsController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create() {
+	public function create()
+	{
 		//
 	}
 
@@ -42,7 +60,8 @@ class LessonsController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store( Request $request ) {
+	public function store(Request $request)
+	{
 		//
 	}
 
@@ -53,20 +72,22 @@ class LessonsController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show( $id ) {
-		$lesson = Lesson::find( $id );
+	public function show($id)
+	{
+		$lesson = Lesson::find($id);
 
-		if ( ! $lesson ) {
-			return Response::json( [
+		if ( ! $lesson)
+		{
+			return Response::json([
 				'error' => [
 					'message' => 'Lesson does not exist'
 				]
-			], 404 );
+			], 404);
 		}
 
-		return Response::json( [
-			'data' => $this->transform($lesson->toArray())
-		], 200 );
+		return Response::json([
+			'data' => $this->lessonTransformer->transform($lesson)
+		], 200);
 	}
 
 	/**
@@ -76,7 +97,8 @@ class LessonsController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit( $id ) {
+	public function edit($id)
+	{
 		//
 	}
 
@@ -88,7 +110,8 @@ class LessonsController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update( Request $request, $id ) {
+	public function update(Request $request, $id)
+	{
 		//
 	}
 
@@ -99,20 +122,9 @@ class LessonsController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy( $id ) {
+	public function destroy($id)
+	{
 		//
 	}
 
-// the transform method enables us to switch some_bool out later if needed
-	private function transformCollection( $lessons ) {
-		return array_map( [ $this, 'transform' ], $lessons->toArray() );
-	}
-
-	private function transform( $lesson ) {
-		return [
-			'title'  => $lesson['title'],
-			'body'   => $lesson['body'],
-			'active' => (boolean) $lesson['some_bool']
-		];
-	}
 }
