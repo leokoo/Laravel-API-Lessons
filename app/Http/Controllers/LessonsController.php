@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Acme\Transformers\LessonTransformer;
 use App\Lesson;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
-use App\Acme\Transformers\LessonTransformer;
 
-class LessonsController extends Controller {
+class LessonsController extends ApiController {
 
 	/**
 	 * @var Acme\Transformers\LessonTransformer
@@ -38,9 +37,9 @@ class LessonsController extends Controller {
 		// 4) No way to signal headers/response code
 		$lessons = Lesson::all();
 
-		return Response::json([
+		return $this->respond([
 			'data' => $this->lessonTransformer->transformCollection($lessons->all())
-		], 200);
+		]);
 	}
 
 	/**
@@ -78,16 +77,12 @@ class LessonsController extends Controller {
 
 		if ( ! $lesson)
 		{
-			return Response::json([
-				'error' => [
-					'message' => 'Lesson does not exist'
-				]
-			], 404);
+			return $this->respondNotFound('Lesson does not exist');
 		}
 
-		return Response::json([
+		return $this->respond([
 			'data' => $this->lessonTransformer->transform($lesson)
-		], 200);
+		]);
 	}
 
 	/**
@@ -126,5 +121,4 @@ class LessonsController extends Controller {
 	{
 		//
 	}
-
 }
